@@ -7,6 +7,7 @@ use super::player::*;
 pub struct GameState {
     pub cells: Vec<CellValue>,
     pub active_player: Player,
+    pub winners: Vec<usize>,
 }
 
 impl GameState {
@@ -14,12 +15,13 @@ impl GameState {
         GameState {
             cells: vec![CellValue::Empty; 9],
             active_player: Player::default(),
+            winners: vec![0, 1, 2],
         }
     }
     pub fn is_draw(&self) -> bool {
         !self.cells.contains(&CellValue::Empty)
     }
-    pub fn is_won(&self) -> bool {
+    pub fn is_won(&self) -> Option<Vec<usize>> {
         let lines = vec![
             vec![0, 1, 2],
             vec![3, 4, 5],
@@ -30,17 +32,16 @@ impl GameState {
             vec![0, 4, 8],
             vec![2, 4, 6],
         ];
-        let mut winner_found = false;
         for line in lines {
             let (a, b, c) = (line[0], line[1], line[2]);
             if self.cells[a] != CellValue::Empty
                 && self.cells[a] == self.cells[b]
                 && self.cells[b] == self.cells[c]
             {
-                winner_found = true;
+                return Some(line);
             }
         }
-        winner_found
+        None
     }
 }
 
@@ -58,10 +59,15 @@ pub fn Game<G: Html>(cx: Scope) -> View<G> {
     });
 
     let game_status = create_memo(cx, || {
-        if (*game_state.get()).is_won() {
+        if let Some(line) = (*game_state.get()).is_won() {
+            game_state.set({
+                let mut gs = (*game_state.get()).clone();
+                gs.winners = line;
+                gs
+            });
             match (*game_state.get()).active_player {
-                Player::X => "X wins".to_string(),
-                Player::O => "O wins".to_string(),
+                Player::X => "X wins!".to_string(),
+                Player::O => "O wins!".to_string(),
             }
         } else if (*game_state.get()).is_draw() {
             "Its a draw".to_owned()
@@ -76,7 +82,13 @@ pub fn Game<G: Html>(cx: Scope) -> View<G> {
     let restart = |_| {
         game_state.set(GameState::new());
     };
-
+    let restart_btn = create_memo(cx, || {
+        if (*game_state.get()).is_won().is_some() || (*game_state.get()).is_draw() {
+            "restart_btn game_over"
+        } else {
+            "restart_btn"
+        }
+    });
     provide_context_ref(cx, game_state);
 
     view! {cx,
@@ -93,15 +105,7 @@ pub fn Game<G: Html>(cx: Scope) -> View<G> {
 
             div(class="game_status") { (*game_status.get()) }
 
-            (
-                if (*game_state.get()).is_won() || (*game_state.get()).is_draw(){
-                    view!{cx,
-                        button(on:click=restart, class="restart_btn") {"Play again"}
-                    }
-                }else{
-                    view!{cx,}
-                }
-            )
+            button(on:click=restart, class=restart_btn) {"Restart"}
         }
     }
 }

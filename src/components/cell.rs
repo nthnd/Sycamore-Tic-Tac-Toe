@@ -27,9 +27,8 @@ pub fn Cell<G: Html>(cx: Scope, ind: usize) -> View<G> {
     let ind = create_ref(cx, ind);
     let game_state = use_context::<Signal<GameState>>(cx);
     let current_cell = create_memo(cx, || (*game_state.get()).cells[*ind]);
-
     let click = |_| {
-        if !(*current_cell.get()).is_set() && !(*game_state.get()).is_won() {
+        if !(*current_cell.get()).is_set() && (*game_state.get()).is_won().is_none() {
             game_state.set({
                 let mut gs = (*game_state.get()).clone();
                 gs.cells[*ind] = CellValue::Player(gs.active_player.next());
@@ -38,8 +37,14 @@ pub fn Cell<G: Html>(cx: Scope, ind: usize) -> View<G> {
             });
         }
     };
-
+    let class = create_memo(cx, || {
+        if (*game_state.get()).winners.contains(ind) && (*game_state.get()).is_won().is_some() {
+            "winner"
+        } else {
+            ""
+        }
+    });
     view! {cx,
-        button(on:click=click) { ((*current_cell.get()).to_string()) }
+        button(on:click=click, class=class) { ((*current_cell.get()).to_string()) }
     }
 }
