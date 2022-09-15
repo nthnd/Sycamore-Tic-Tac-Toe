@@ -3,12 +3,14 @@
     box-sizing: border-box;
     font-size: 1rem;
 }
-body {
-    background: #ffffff;
-    color: #000000;
+body{
+    margin: 0;
+}
+.body {
+    background: var(--bg);
+    color: var(--fg);
     display: grid;
     place-content: center;
-    margin: 0;
     height: 100vh;
 }
 main{
@@ -23,35 +25,49 @@ main{
 .board button {
     height: 6ch;
     appearance: none;
-    border: none;
-    border-radius: 1ch;
-    background: #efefef;
-    transition: background 1s;
+    background: var(--mg);
+    transition: background 0.1s;
+    color: var(--fg);
 }
 .board button.winner {
-    background: #3dfe8e;
+    background: var(--highlight);
 }
 .game_status{
     padding: 2ch 0;
 }
 .restart_btn{
-    appearance:none;
-    border: 1px solid;
+    border: 1px solid var(--accent);
     border-radius: 1ch;
-    background: #ffffff;
-    padding: 1ch 2ch;
-    color: #4e3bfb;
+    background: var(--bg);
+    color: var(--accent);
     transition: background .3s;
     cursor: pointer;
 }
+.theme_btn{
+    border: 1px solid transparent;
+    color: var(--accent);
+    background: transparent;
+    font-size: 3ch;
+    padding-bottom: 0.5ch;
+}
+.bottom_btns{
+    display:grid;
+    grid-template-columns: 13ch 6ch;
+    height: 6ch;
+    grid-gap: 1ch;
+}
 button {
+    border: none;
+    appearance:none;
+    border-radius: 1ch;
     transition: transform .4s ease;
+    cursor: pointer;
 }
 button:active{
     transform: scale(0.9);
 }
 .game_over {
-    background: #4e3bfb;
+    background: var(--accent);
     color: #ffffff;
     font-weight: bold;
 }
