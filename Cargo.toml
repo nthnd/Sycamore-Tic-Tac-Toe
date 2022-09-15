@@ -1,5 +1,5 @@
 [package]
-name = "sycamore_test"
+name = "sycamore_tic_tac_toe"
 version = "0.1.0"
 edition = "2021"
 
