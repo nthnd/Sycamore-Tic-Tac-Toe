@@ -2,7 +2,7 @@
 Made using [Sycamore](https://sycamore-rs.netlify.app)
 
 ## Live preview
-* [Here](https://nate-sys.gihtub.io/sycamore-tic-tac-toe)
+* [Here](https://nate-sys.github.io/sycamore-tic-tac-toe)
 
 ## Source
 Follow [these steps](https://sycamore-rs.netlify.app/docs/getting_started/installation)
