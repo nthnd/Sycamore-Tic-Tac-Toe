@@ -89,23 +89,52 @@ pub fn Game<G: Html>(cx: Scope) -> View<G> {
             "restart_btn"
         }
     });
+    let theme = create_signal(cx, false);
+    let theme_btn_icon = create_memo(cx, || if *theme.get() { "☼" } else { "◑" });
+    let style = create_memo(cx, || {
+        if *theme.get() {
+            format!(
+                "{}{}{}{}{}",
+                "--bg: #ffffff;",
+                "--mg: #efefef;",
+                "--fg: #000000;",
+                "--accent: #4e3bfb;",
+                "--highlight: #3dfe8e",
+            )
+        } else {
+            format!(
+                "{}{}{}{}{}",
+                "--bg: #232328;",
+                "--mg: #343338;",
+                "--fg: #ffffff;",
+                "--accent: #4e3bfb;",
+                "--highlight: #43a346",
+            )
+        }
+    });
+    let toggle_theme = |_| theme.set(!*theme.get());
     provide_context_ref(cx, game_state);
 
     view! {cx,
-        main {
+        div(class="body", style=style){
+            main{
+                div(class="board") {
+                    Indexed (
+                        iterable=cells,
+                        view = |cx, x| view! { cx,
+                            Cell (x.0)
+                        }
+                    )
+                }
 
-            div(class="board") {
-                Indexed (
-                    iterable=cells,
-                    view = |cx, x| view! { cx,
-                        Cell (x.0)
-                    }
-                )
+                div(class="game_status") { (*game_status.get()) }
+
+                div (class="bottom_btns"){
+                    button(on:click=restart, class=restart_btn) {"Restart"}
+                    button(on:click=toggle_theme, class="theme_btn") {(*theme_btn_icon.get())}
+                }
+
             }
-
-            div(class="game_status") { (*game_status.get()) }
-
-            button(on:click=restart, class=restart_btn) {"Restart"}
         }
     }
 }
