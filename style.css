@@ -1,0 +1,57 @@
+*{
+    font-family: monospace;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+body {
+    background: #ffffff;
+    color: #000000;
+    display: grid;
+    place-content: center;
+    margin: 0;
+    height: 100vh;
+}
+main{
+    display:grid;
+    justify-items: center;
+}
+.board {
+    display: grid;
+    grid-template-columns: 6ch 6ch 6ch;
+    grid-gap: 1ch;
+}
+.board button {
+    height: 6ch;
+    appearance: none;
+    border: none;
+    border-radius: 1ch;
+    background: #efefef;
+    transition: background 1s;
+}
+.board button.winner {
+    background: #3dfe8e;
+}
+.game_status{
+    padding: 2ch 0;
+}
+.restart_btn{
+    appearance:none;
+    border: 1px solid;
+    border-radius: 1ch;
+    background: #ffffff;
+    padding: 1ch 2ch;
+    color: #4e3bfb;
+    transition: background .3s;
+    cursor: pointer;
+}
+button {
+    transition: transform .4s ease;
+}
+button:active{
+    transform: scale(0.9);
+}
+.game_over {
+    background: #4e3bfb;
+    color: #ffffff;
+    font-weight: bold;
+}
